@@ -1,10 +1,11 @@
 package cadastro.produtos.cadastro.produtos;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
     static Produto[] produtos = new Produto[20];
-    static Scanner scanner = new Scanner(System.in);
+    static Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
     static boolean cadastrado = false;
     static boolean ordenado = false;
 
@@ -13,9 +14,9 @@ public class Main {
         System.out.println("1.Cadastrar os 20 produtos.");
         System.out.println("2.Classificar os registros por código.");
         System.out.println("3.Pesquisar por um produto.");
-        System.out.println("4.Apresentar, de forma ordenada, os registros dos produtos com preço acima de R$ 100,00");
-        System.out.println("5.Apresentar, de forma ordenada, os registros dos produtos com preço entre R$ 50,00 e R$ 100,00.");
-        System.out.println("6.Apresentar, de forma ordenada, os registros dos produtos com preço abaixo de R$ 50,00");
+        System.out.println("4.Apresentar, de forma ordenada, os registros dos produtos com preço acima de R$ 100.00");
+        System.out.println("5.Apresentar, de forma ordenada, os registros dos produtos com preço entre R$ 50.00 e R$ 100.00.");
+        System.out.println("6.Apresentar, de forma ordenada, os registros dos produtos com preço abaixo de R$ 50.00");
         System.out.println("7.Apresentar todos os registros e informar o preço médio dos produtos cadastrados.");
         System.out.println("8.Sair do programa.\n");
     }
@@ -39,10 +40,12 @@ public class Main {
     public static void exibirProduto(Produto p) {
         System.out.println("Código: " + p.getCodigo());
         System.out.println("Nome: " + p.getNome());
-        System.out.println("Preço: " + p.getPreco());
+        System.out.printf(Locale.US,"Preço: %.2f%n", p.getPreco());
     }
 
     public static void cadastrarProduto() {
+        double precoProduto;
+
         for (int i = 0; i < produtos.length; i++) {
             System.out.println("Código: ");
             String codigoProduto = scanner.nextLine();
@@ -50,9 +53,14 @@ public class Main {
             System.out.println("Nome: ");
             String nomeProduto = scanner.nextLine();
 
-            System.out.println("Preco: ");
-            double precoProduto = scanner.nextDouble();
-            scanner.nextLine();
+            do {
+                System.out.println("Preco (ex: xx.xx): ");
+                precoProduto = scanner.nextDouble();
+                scanner.nextLine();
+                if(precoProduto < 0){
+                    System.out.println("O preço do produto não pode ser negativo!");
+                }
+            }while(precoProduto < 0);
 
             produtos[i] = new Produto(codigoProduto, nomeProduto, precoProduto);
         }
@@ -162,7 +170,7 @@ public class Main {
             System.out.println("\nCADASTRO " + (i + 1));
             exibirProduto(produtos[i]);
         }
-        System.out.println("\nMÉDIA DO PREÇO DOS PRODUTOS: " + calcularPrecoMedio());
+        System.out.printf(Locale.US, "\nMÉDIA DO PREÇO DOS PRODUTOS: %.2f%n", calcularPrecoMedio());
     }
 
     public static void main(String[] args) {
